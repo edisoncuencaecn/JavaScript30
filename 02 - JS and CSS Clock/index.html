@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+
+
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+      </div>
+    </div>
+
+
+  <style>
+    html {
+      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .clock-face {
+      position: relative; /* to a parent of .hand */
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+    }
+
+    .hand {
+      width: 50%;
+      height: 6px;
+      background: black;
+      position: absolute; /* to be a child of .clock-face */
+      top: 50%;
+      transform-origin: 100%;  /* To place the rotation origin or axis of the h,m,s clock handlers to the center*/
+      transform: rotate(90deg); /* To place the handlers starting at 12 o'clock position */
+      transition: all 0.5s; /* to move/rotate every 20 degres*/
+      transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1); /* to make the handlers ticking move forwards and backwords*/
+      /*
+      cubic-bezier values for a desired transition easing effect, but now you don't have to, as Google Chrome 42.x.x introduced the much-awaited cubic-bezier editor directly in the Chrome Devtools!
+      cubic-bezier.com cubic-bezier(x1, y1, x2, y2) animation from point 1 to 2.
+      */
+    }
+
+  </style>
+    
+  <script>
+    /* to find the respective h,m,s animation CSS class*/
+    const secondsHand = document.querySelector('.second-hand');
+    const minsHand = document.querySelector('.min-hand');
+    const hoursHand = document.querySelector('.hour-hand');
+
+    /* provides the time h,m,s*/
+    function setDate(){
+      const now = new Date();
+
+      const seconds = now.getSeconds();
+      // to convert time into degress 0 hms = 0 deg, 12 hms = 360 deg
+      const secondsDegrees = ((seconds /60) * 360) + 90; // + 90 to upset the rotation start point at 12 o'clock
+      if (secondsDegrees > 0) {
+        // To add the respective customed CSS animation to the DOM, the ticks `` are used to pass the respective value.
+         secondsHand.style.transform = `rotate(${secondsDegrees}deg)`;
+      } else {
+        console.log(secondsDegrees);
+         // add a listener when secondsDegress, minsDegress, hoursDegress = 0
+         secondsHand.addEventListener('transitionend',removeTransition(secondsHand));
+      }
+      
+      const mins = now.getMinutes();
+      const minsDegrees = ((mins /60) * 360) + 90;
+      //console.log(minsDegrees);
+      if (minsDegrees > 0) {
+        minsHand.style.transform = `rotate(${minsDegrees}deg)`;
+      }
+
+      const hours = now.getHours();
+      const hoursDegrees = ((hours /12) * 360) + 90;
+      //console.log(hoursDegrees);
+      if (hoursDegrees > 0) {
+        hoursHand.style.transform = `rotate(${hoursDegrees}deg)`;
+      }
+
+    }
+    /* provides time intervals to move accordingly the h.m.s handlers*/
+    setInterval(setDate, 1000); 
+
+    /* Issue: when seconds handler reaches 12 (transforms 0, 90 deg), it moves backwards to 6 before to continue forward towards 1 
+      We should create a condition to avoid the transform at 0 and 90 degress to keep counting or take off the transition: all 0.5s and re-apply after;
+    */
+   
+   function removeTransition(e) {
+     // skips when transform property is not detected
+     if(e.propertyName !== 'transition') return;
+     console.log(e.propertyName); 
+     //'this' represents the key itself.
+     console.log(this);
+     this.classList.remove('hand')
+   };
+   
+
+  </script>
+</body>
+</html>

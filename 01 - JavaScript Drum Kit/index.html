@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+
+
+  <div class="keys">
+    <div data-key="65" class="key"> <!-- by keyboardEvent.keyCode custom data attribute html tag embedding the respective stored/prefixed key sound file (audio element) to the page, it can be used in page's js w/o SSR-->
+      <kbd>A</kbd> <!-- name of a regular keyboard key-->
+      <span class="sound">clap</span> <!-- name of the sound mapped to each regular keyboard key-->
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="sounds/clap.wav"></audio> <!-- Audio element tag by keyboardEvent.keyCode stored/prefixed key sound file, it can be used in page's js w/o SSR-->
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+<script>
+  /* After been listening for a keyboardEvent, once the keydown key is pressed the respective event function will executes*/
+  window.addEventListener('keydown', function(e) {
+    // checks if there is a keyCode audio element tag from the stored/prefixed sound files data  for the respective pressed key.
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`); // document.querySelectorAll()
+    // Selects the respective pressed key animation class
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);
+    // To skip null values when a key does not have a stored keyCode mapped.
+    if (!audio) return;
+    // To rewind the sound and play it again from the start if the key is right away pressed again while is already playing.
+    audio.currentTime = 0;
+    audio.play();
+    console.log(key);
+    // Animates the respective pressed key on the screen keybord, key.addClass('playing');
+    key.classList.add('playing'); // key.classList.remove(), key.classList.toggle()
+    //setTimeout(function(){}, 0.09);
+    //key.classList.remove('playing');
+  });
+
+  // Listen to each/all keys for when the trasition has happed (yellow color, Class playing) and has ended then remove the respectve animation to animate another key.
+  function removeTransition(e) {
+    // skips when transform property is not detected
+    if(e.propertyName !== 'transform') return;
+    //console.log(e.propertyName); 
+    //'this' represents the key itself.
+    //console.log(this);
+    this.classList.remove('playing')
+  };
+  // Selects all the keys on the screen
+  const keys = document.querySelectorAll('.key');
+  console.log(keys);
+  // add a listener to each of the screen keys.
+  keys.forEach(key => key.addEventListener('transitionend',removeTransition));
+
+</script>
+
+
+</body>
+</html>
