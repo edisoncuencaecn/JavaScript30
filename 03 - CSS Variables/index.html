@@ -1,0 +1,91 @@
+<!-- Updating css variables with java script adding a range for adjustment- instead a fixed value as defined in style -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scoped CSS Variables and JS</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
+  <!-- for attribute in an HTML <label> tag is used to associate the label with a specific form/input element id -->
+  <div class="controls">
+    <label for="spacing">Spacing:</label>
+    <!-- data-sizing is a made up object to attach px to the respective range of values -->
+    <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
+
+    <label for="blur">Blur:</label>
+    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+
+    <label for="base">Base Color</label>
+    <input id="base" type="color" name="base" value="#ffc600">
+  </div>
+
+  <!--img src="https://source.unsplash.com/7bwQXzbF6KE/800x500"--> <!-- unavailable -->
+  <img src="/small-boats_1.jpg" width="800" height="500">
+
+  <style>
+    /* CSS variables have to be declared in sort of HTML element such as on root which is the HTML hightest level */
+    :root {
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+    /* used of the CSS variables */
+    img {
+      padding: var(--spacing);
+      background: var(--base);
+      filter: blur(var(--blur));
+    }
+    /* highlights */
+    .hl {
+      color: var(--base);
+    }
+
+
+    /*
+      misc styles, nothing to do with CSS variables
+    */
+
+    body {
+      text-align: center;
+      background: #193549;
+      color: white;
+      font-family: 'helvetica neue', sans-serif;
+      font-weight: 100;
+      font-size: 50px;
+    }
+
+    .controls {
+      margin-bottom: 50px;
+    }
+
+    input {
+      width: 100px;
+    }
+  </style>
+
+  <script>
+     // To select all the inputs on the page in a NodeList
+     const inputs = document.querySelectorAll('.controls input');
+     function handleUpdate() {
+     /* data-sizing is a made up object to attach px to the respective range of values */
+        const suffix = this.dataset.sizing || '';
+        console.log(`value: ${this.value} suffix: ${suffix}`);
+        console.log(this.name);
+      /* Change the respective composted  --CSS variable name this.name plus the suffix 
+      --base: #ffc600;
+      --spacing: 10px;
+      --blur: 10px;
+      */
+        document.documentElement.style.setProperty(`--${this.name}`, this.value + suffix);
+     }
+     // To listen for a change event on each of the inputs when selector is changed then execute the respective function
+     inputs.forEach(input => input.addEventListener('change', handleUpdate))
+     // To listen for a change event on each of the inputs when mouse is moved then execute the respective function
+     inputs.forEach(input => input.addEventListener('mousemove', handleUpdate))
+
+  </script>
+
+</body>
+</html>

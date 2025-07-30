@@ -84,36 +84,52 @@
     /* provides the time h,m,s*/
     function setDate(){
       const now = new Date();
-
       const seconds = now.getSeconds();
+    if (seconds > 0 ) { // bug is not about secondsHand.style.transform = ( `rotate(${secondsDegrees}deg)`);
       // to convert time into degress 0 hms = 0 deg, 12 hms = 360 deg
-      const secondsDegrees = ((seconds /60) * 360) + 90; // + 90 to upset the rotation start point at 12 o'clock
-      if (secondsDegrees > 0) {
-        // To add the respective customed CSS animation to the DOM, the ticks `` are used to pass the respective value.
-         secondsHand.style.transform = `rotate(${secondsDegrees}deg)`;
-      } else {
-        console.log(secondsDegrees);
+      const secondsDegrees = ((seconds /60) * 360) + (seconds === 60 || seconds === 0 ? 0 : 90); // + 90 to upset the rotation start point at 12 o'clock
+      if (secondsDegrees === 0 || secondsDegrees === 90) {
+         // To add the respective customed CSS animation to the DOM, the ticks `` are used to pass the respective value.
+         //console.log(`propertyName: ${secondsHand.propertyName}`); 
+         console.log(`seconds: ${seconds}, secondsDegrees: ${secondsDegrees}`); //0 seconds & 0 secondsDegress
          // add a listener when secondsDegress, minsDegress, hoursDegress = 0
-         secondsHand.addEventListener('transitionend',removeTransition(secondsHand));
+         // An Event fired when a CSS transition 'secondsHand' has finished playing. DOES NOT WORK
+         const myHand = document.getElementById('hand');
+         if (myHand) {
+           myHand.addEventListener('transitionend', removeTransition(hand));
+         }
+      } else {
+          console.log(`seconds: ${seconds}, secondsDegrees: ${secondsDegrees}`); 
+          secondsHand.style.transform = ( `rotate(${secondsDegrees}deg)`);
       }
-      
+    }
       const mins = now.getMinutes();
-      const minsDegrees = ((mins /60) * 360) + 90;
-      //console.log(minsDegrees);
-      if (minsDegrees > 0) {
+      const minsDegrees = ((mins /60) * 360) + (mins === 60 || mins === 0 ? 0 : 90);
+      if (minsDegrees === 0 || minsDegrees === 90) {
+         console.log(`minDegress: ${minsDegrees}`);
+      } else {
         minsHand.style.transform = `rotate(${minsDegrees}deg)`;
       }
 
       const hours = now.getHours();
-      const hoursDegrees = ((hours /12) * 360) + 90;
-      //console.log(hoursDegrees);
+      const hoursDegrees = ((hours /12) * 360) + (hours === 12 ? 0 : 90);
+      /*console.log(hoursDegrees);
       if (hoursDegrees > 0) {
+        hoursHand.style.transform = `rotate(${hoursDegrees}deg)`;
+      }
+      */
+      if (hoursDegrees === 0 || hoursDegrees === 90){
+         console.log(`hoursDegress: ${hoursDegrees}`);
+      } else {
         hoursHand.style.transform = `rotate(${hoursDegrees}deg)`;
       }
 
     }
-    /* provides time intervals to move accordingly the h.m.s handlers*/
-    setInterval(setDate, 1000); 
+    //if (seconds !== 0 || mins !== 0 || hours != 12 ) {
+       /* provides time intervals to move accordingly the h.m.s handlers*/
+       setInterval(setDate, 1000); 
+    //}
+   
 
     /* Issue: when seconds handler reaches 12 (transforms 0, 90 deg), it moves backwards to 6 before to continue forward towards 1 
       We should create a condition to avoid the transform at 0 and 90 degress to keep counting or take off the transition: all 0.5s and re-apply after;
