@@ -1,0 +1,165 @@
+<!-- The flex panels words on the images will grow inside and fall from top to bottom once the respective image is click-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flex Panels 💪</title>
+  <link href='https://fonts.googleapis.com/css?family=Amatic+SC' rel='stylesheet' type='text/css'>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+  <style>
+    html {
+      box-sizing: border-box;
+      background: #ffc600;
+      font-family: 'helvetica neue';
+      font-size: 20px;
+      font-weight: 200;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    *, *:before, *:after { /* to apply styles universally to all elements and their ::before and ::after pseudo-elements */
+      box-sizing: inherit;
+    }
+    /* all panels container */
+    .panels {
+      min-height: 100vh;
+      overflow: hidden;
+      display:flex;/* mage the panel to use flexbox & place the panels side by side, only one dimention - columns */
+    }
+    /* each panel container*/
+    .panel {
+      background: #6B0F9C;
+      box-shadow: inset 0 0 0 5px rgba(255,255,255,0.1);
+      color: white;
+      text-align: center;
+      align-items: center;
+      /* Safari transitionend event.propertyName === flex */
+      /* Chrome + FF transitionend event.propertyName === flex-grow */
+      transition:
+        font-size 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+        flex 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+        background 0.2s;
+      font-size: 20px;
+      background-size: cover;
+      background-position: center;
+      flex: 1; /* tell each individual panel to use the available space splitted among them selves-children evenly distribute the extra space*/
+      justify-content: center; /* place test on center of each panel*/
+      align-items: center; /* place test on center left-right of each panel*/
+      display: flex; /* make this panel flex*/
+      flex-direction: column; /* stack them left to right by flexbox default, then to change it right to left, also to make text to center in the vertically middle*/
+    }
+    /* Browser is unable to link/retrieve these images
+    .panel1 { background-image:url(https://source.unsplash.com/gYl-UtwNg_I/1500x1500); }
+    .panel2 { background-image:url(https://source.unsplash.com/rFKUFzjPYiQ/1500x1500); }
+    .panel3 { background-image:url(https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&w=1500&h=1500&fit=crop&s=967e8a713a4e395260793fc8c802901d); }
+    .panel4 { background-image:url(https://source.unsplash.com/ITjiVXcwVng/1500x1500); }
+    .panel5 { background-image:url(https://source.unsplash.com/3MNzGlQM7qs/1500x1500); }
+    */
+    /* Added img folder with images to be used*/
+    .panel1 { background-image: url("./img/img_5terre.jpg");} 
+    .panel2 { background-image:url("./img/img_chania.jpg");}
+    .panel3 { background-image:url(https://images.unsplash.com/photo-1465188162913-8fb5709d6d57?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&cs=tinysrgb&w=1500&h=1500&fit=crop&s=967e8a713a4e395260793fc8c802901d); }
+    .panel4 { background-image:url("./img/img_forest.jpg");}
+    .panel5 { background-image:url("./img/img_lights.jpg"); }
+
+    /* Flex containers Children - eah panel*/
+    .panel > * { /* targets all direct child elements of an element with the class panel such as panels 1,2,3,4,5 */
+      margin: 0;
+      width: 100%;
+      transition: transform 0.5s;
+      /* border: 1px solid red; place temporarely a red border to notice the transition in the text*/
+      flex: 1 0 auto; /* place the text on top middle bottom of each panel */
+      display: flex; /* to make each panel use flexbox */
+      justify-content: center; /* make them perfectly center */
+      align-items: center; /* make them perfectly centered */
+    }
+    
+    /* Flex text Children */
+    .panel > *:first-child {
+      transform: translateY(-100%); /* to make text first/top word to fall vertically from top edge on each panel*/
+    }
+    /* When the panel w/class open-active has a class state of "open-active"  will animate itself */
+    .panel.open-active > *:first-child { transform: translateY(0);}
+
+     /* Flex text Children */
+    .panel > *:last-child {
+      transform: translateY(100%); /* to make text last/bottom word to rise vertically from bottom edge on each panel*/
+    }
+
+    /* When the panel w/class open-active has a class state of "open-active" will animate itself */
+    .panel.open-active > *:last-child { transform: translateY(0);}
+
+    .panel p {
+      text-transform: uppercase;
+      font-family: 'Amatic SC', cursive;
+      text-shadow: 0 0 4px rgba(0, 0, 0, 0.72), 0 0 14px rgba(0, 0, 0, 0.45);
+      font-size: 2em;
+    }
+
+    .panel p:nth-child(2) {
+      font-size: 4em;
+    }
+
+    .panel.open {
+      font-size: 40px; /* "open" class will make words size 40px bigger */
+      flex: 5; /* once panel is open, it will take 5 times of extra room as rest of them, flex-grow gflex-shrink flex-baics */
+    }
+
+  </style>
+
+
+  <div class="panels">
+    <div class="panel panel1"> <!-- "open-active" class will animate w/js toggleOpen the panel words, also "open" class will make words size 40px bigger -->
+      <p>Hey</p>
+      <p>Let's</p>
+      <p>Dance</p>
+    </div>
+    <div class="panel panel2">
+      <p>Give</p>
+      <p>Take</p>
+      <p>Receive</p>
+    </div>
+    <div class="panel panel3">
+      <p>Experience</p>
+      <p>It</p>
+      <p>Today</p>
+    </div>
+    <div class="panel panel4">
+      <p>Give</p>
+      <p>All</p>
+      <p>You can</p>
+    </div>
+    <div class="panel panel5">
+      <p>Life</p>
+      <p>In</p>
+      <p>Motion</p>
+    </div>
+  </div>
+
+  <script>
+    const panels = document.querySelectorAll('.panel'); /* Select all the panels in a node list, also getElementsByClassName()*/
+    /* to open respective clicked on panel, toggles between tokens-classNames in the list*/
+    function toggleOpen(){ 
+      console.log('Hello');
+      this.classList.toggle('open'); /*  will add class .panel.open or remove this class to the respective DIV*/
+    };
+
+    function toggleActive(e){ /* pass to event=transition as e*/
+      console.log(e.propertyName); /* to see which event or transition is running when ".panel.open": (index):147 Hello, (index):152 flex-grow, (index):152 font-size */
+      if(e.propertyName.includes('flex')){ /* once flex transition is done only, for Safari is just 'flex', the rest 'flex-grow' */
+        this.classList.toggle('open-active'); /* will add class .panel.open-active to the respective DIV*/
+      }
+    };
+    /* Listen for a click on each/any of the panels then trigger the function toggleOpen as reference only to run it after the click, 
+    if given toggleOpen() like this it will run on page load which its not the case */
+    panels.forEach(panel => panel.addEventListener('click',toggleOpen));
+    /* once the panel has transitioning opened "transitionend" event, then the respective panel words will fall from top and rise from bottom */
+    panels.forEach(panel => panel.addEventListener('transitionend',toggleActive));
+
+  </script>
+</body>
+</html>
