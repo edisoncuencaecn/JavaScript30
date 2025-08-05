@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Type Ahead 👀 and filter API</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+
+  <form class="search-form">
+    <input type="text" class="search" placeholder="City or State"><!-- Input display -->
+    <ul class="suggestions"> <!-- Output display -->
+      <li>Filter for a city</li>
+      <li>or a state</li>
+    </ul>
+  </form>
+  
+<script>
+const endpoint = 'https://gist.githubusercontent.com/Miserlou/c5cd8364bf9b2420bb29/raw/2bf258763cdddd704f8ffd3ea9a3e81d25e2c6f6/cities.json';
+const cities = []; /* array to hold the API data response*/
+/* the response will bring a promise, headers status:200, type: cors, json, data*/
+const prom = fetch(endpoint)
+  .then(blob => blob.json())
+  .then(data => cities.push(...data)); /* pushing data to array with spread will fetch all the data fields and values into the array*/
+  //console.log(cities);
+
+  function findMatches(wordToMatch, cities) { /* Input: cities is the array for the output*/
+    return cities.filter(place => {
+      // Here we need to figure out if the city or state matches what was searched
+      // Also how we put a varible into a regular expression
+      const regex = new RegExp(wordToMatch, 'gi'); /* RegularExpresion: flag for global search, i case sensitive, m multiline, 
+      anchors match positions within a string (e.g., ^ for beginning, $ for end).
+      */
+      return place.city.match(regex) || place.state.match(regex);
+    })
+  };
+  
+  /* To add a comma in between matched city/state and population*/
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function displayMatches2 () { /* Output*/
+    /* we pass wordToMatch as 'searchInput' value as 'this.value' refers to 'value property of the object' either data which is changed or keyed up and provide the array for the output */
+    const matchArray = findMatches(this.value, cities);
+    /* console.log(this.value);
+    console.log(matchArray); */
+
+    const html = matchArray.map(place => {
+      /* in order to format population and highlight the matched words by replacing ${place.city} with ${cityName}
+      , also by replacing ${place.state} with ${stateName}
+      , also by replacing ${place.population with ${numberWithCommas(place.population)} to format the population# */
+      /*
+      .hl {
+         background: #ffc600;
+      }
+      */
+      const regex = new RegExp(this.value, 'gi');
+      const cityName = place.city.replace(regex, `<span class="h1">${this.value}</span>`);
+      const stateName = place.state.replace(regex, `<span class="h1">${this.value}</span>`);
+      /* creates the html data structure to display the output to be rendered*/
+       return `
+       <li>
+         <span class="name">${cityName}, ${stateName}</span> 
+         <span class="population">${numberWithCommas(place.population)}</span>
+       </li>
+       `;
+    }).join(''); /* map will return an array by default, but w/join will make to return the array as string*/
+    /*console.log(html);*/
+    /*
+    <li>
+         <span class="name"> Columbus,Ohio</span>
+         <span class="population"> 822553</span>
+    </li>
+    .....
+    */
+    suggestions.innerHTML = html; /* innerHTML interprets and renders HTML tags within the provided string */
+  };
+  
+  /* somehow the previos function does not highlight the matched words, maybe due to the comments because its identical */
+  function displayMatches() {
+    const matchArray = findMatches(this.value, cities);
+    const html = matchArray.map(place => {
+    const regex = new RegExp(this.value, 'gi');
+    const cityName = place.city.replace(regex, `<span class="hl">${this.value}</span>`);
+    const stateName = place.state.replace(regex, `<span class="hl">${this.value}</span>`);
+    return `
+      <li>
+        <span class="name">${cityName}, ${stateName}</span>
+        <span class="population">${numberWithCommas(place.population)}</span>
+      </li>
+    `;
+  }).join('');
+  suggestions.innerHTML = html;
+}
+
+  const searchInput = document.querySelector('.search'); /* input*/
+  const suggestions = document.querySelector('.suggestions'); /* output*/
+  /* input 'change' triggers only when we go off of the input box not when we type anything, 
+  'keyup' triggers when we type anything*/
+  /* add 2 triggers to class '.search'*/
+  searchInput.addEventListener('change', displayMatches) /* displayMatches not displayMatches() to trigger no when the whole page is loaded*/
+  searchInput.addEventListener('keyup', displayMatches) 
+
+</script>
+</body>
+</html>

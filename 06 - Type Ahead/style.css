@@ -66,9 +66,9 @@ input.search {
 }
 
 span.population {
-  font-size: 15px;
+  font-size: 20px;
 }
 
-.hl {
+.hl { /* this a custom class not the html h1 elemnent */
   background: #ffc600;
 }
