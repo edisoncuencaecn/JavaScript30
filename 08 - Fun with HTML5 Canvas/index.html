@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML5 Canvas</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+<canvas id="draw" width="800" height="800"></canvas>
+
+<script>
+/*
+const canvas = document.getElementById("draw");
+const ctx = canvas.getContext("2d");
+ctx.beginPath();
+ctx.moveTo(20, 20);
+ctx.lineTo(20, 100);
+ctx.lineTo(70, 100);
+ctx.stroke();
+*/
+const canvas = document.querySelector('#draw');
+const ctx = canvas.getContext('2d');/* is the container where we are able to draw the canvas w/js, because it's empty by default*/
+canvas.width = window.innerWidth; /* size the canvas */
+canvas.height = window.innerHeight; /* size the canvas */
+ctx.strokeStyle = '#BADA55'; /* color*/
+ctx.lineJoin = 'round'; /* to make end of line round */
+ctx.lineCap = 'round'; /* to make end of line round */
+ctx.lineWidth = 100; /* make drawing lines thicker*/
+/*
+The globalCompositeOperation property sets or returns how a source are drawn over a destination.
+Source = drawings you are about to draw on the canvas.
+Destination = drawings that are already drawn on the canvas.
+https://www.w3schools.com/jsref/canvas_globalcompositeoperation.asp
+*/
+ctx.globalCompositeOperation = 'multiply';
+
+let isDrawing = false; /* to control wwhen drawing is allow/active */
+let lastX = 0; /* last drawed x point */
+let lastY = 0; /* last drawed y point */
+/*  HSV: hue (the pure color), saturation (the intensity), and value (brightness) */
+let hue = 0; /* starts w/0, mother-effing to change hue through all the colors gamut, HueUpDown Saturation Lighness */
+
+let direction = true;/*  canvas specifies the text direction when drawing text. 
+It determines how text is aligned and rendered in terms of left-to-right (LTR) or right-to-left (RTL) directionality.*/
+
+/* this function draw will be called once we start moving the mouse on top of the canvas, then listening for a move event*/
+function draw(e) {
+  if (!isDrawing) return; // stops the fn from running when they are not moused down movement
+  console.log(e);
+  ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`; /* as we start drawing with colors gamut hsl with variable Hue 100% Saturation 50% Lighness*/
+  ctx.beginPath(); /* Begins a Path or drawing */
+  // start from
+  ctx.moveTo(lastX, lastY); /* Moves to a Point */
+  // go to
+  ctx.lineTo(e.offsetX, e.offsetY); /* Draws in the Path*/
+  ctx.stroke(); /* Draws the Path */
+  [lastX, lastY] = [e.offsetX, e.offsetY]; /* structuring in arrray, to retrieve mouse(e) position offsetX, offsetY from the log to update latest position */
+
+  hue++; /* as we continue drawing we update colors gamut hsl Hue */
+  if (hue >= 360) { /* hue goes back to zero red*/
+     hue = 0;
+  }
+  if (ctx.lineWidth >= 100 || ctx.lineWidth <= 1) {/* lineWidth goes back to 1 thinner to stop infinite linewidth */
+   direction = !direction;/* toggle direction flag when linewidth is too thick */
+  }
+
+  if(direction) {/* depending of the direction flag is then linewidth will be increased/decreased thickness accordingly */
+   ctx.lineWidth++;/*depending direction the line thicknes will increase*/
+  } else {
+   ctx.lineWidth--;/*depending direction the line thickness will decrease*/
+  }
+}
+
+/* To listen for move events then log the respective coordinates on the canvas when isDdrawing is true only*/
+/* allow to draw only when 'mousedown' and 'mousemove' otherwise will turns off, but drawing always starts at 0,0 position and creates a continuos line */
+canvas.addEventListener('mousedown', (e) => { /* turns on drawing (e) and resolves issue: when drawing always starts at 0,0 position and creates a continuos line*/
+  isDrawing = true;
+  [lastX, lastY] = [e.offsetX, e.offsetY]; /* to retrieve mouse(e) position offsetX, offsetY from the log to update latest position */
+});
+canvas.addEventListener('mousemove', draw); /* calls fn draw()*/
+canvas.addEventListener('mouseup', () => isDrawing = false); /* turns off drawing*/
+canvas.addEventListener('mouseout', () => isDrawing = false); /* turns off drawing*/
+
+
+</script>
+
+<style>
+  html, body {
+    margin: 0;
+  }
+</style>
+
+</body>
+</html>
