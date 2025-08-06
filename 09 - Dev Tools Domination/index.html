@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Console Tricks!</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+
+  <p onClick="makeGreen()">×BREAK×DOWN×</p>
+
+  <script>
+    const dogs = [{ name: 'Snickers', age: 2 }, { name: 'hugo', age: 8 }];
+
+    function makeGreen() {
+      const p = document.querySelector('p');
+      p.style.color = '#BADA55';
+      p.style.fontSize = '50px';
+    }
+
+    // Regular
+    /* Break points, right click on elements, break on, attribute modifications
+    click on left element bar before the line of code to create a break point (blue dot), 
+    clicking on inpection screen will pause in source respective line of code.
+    To remove the break point right click on elements, attribute modifications
+    click on blue dot to remove the break point (blue dot)
+    */
+    console.table(dogs);
+    // Interpolated to be seen on Console
+    console.log('Hello I am a %s string!','+po');
+    console.table(`my object: ${dogs}`);
+
+    // Styled
+    /* two arguments: %c and the style code to be rendered on the dev tools console localhost */
+    console.log('%c I am some greate text','font-size:50px; background:red; text-shadow: 10px 10px 0 blue;');
+    // warning! to be seen on console warnings.
+    console.warn('OH NOOO!');
+    // Error :to be seen on console errors, also will display the file and the line where the console.error() is coded.
+    console.error('OH NOOO!');
+    // Info : to be seen on console info, also will display the file and the line where the console.info() is coded.
+    console.info('OH NOOO!');
+    // Testing: to be seen on console errors, also will display the file and the line where the console.assert() is coded.
+    console.assert(1===2, 'That is true');
+    const p = document.querySelector('p');
+    console.assert(p.classList.contains('ouch'), `${p} that is wrong`);
+    // clearing will be executed if 'Preserve log' is disable on the dev tools settings.
+    console.clear();
+    // Viewing DOM Elements: to be seen at Console localhost
+    console.log(p); /* will display the html code */
+    console.dir(p); /* will display the html element methods & properties which live in the element like classList, children, etc */
+    // Grouping together: looping the object elements to be seen on Console localhost
+    dogs.forEach(dog => {
+      console.group(`${dog.name}`);
+      console.log(`dog's age: ${dog.age * 7} years old.`);
+      console.groupEnd(`${dog.name}`);
+    });
+    // counting how many times is used a specific word to be seen on Console localhost.
+    console.count('wes');
+    // timing to figure out how long will take any procedure like fetch, details to be seen on Console localhost.
+       console.time('fetching data');
+       fetch('https://api.github.com/users/wesbos')
+      .then(data => data.json())
+      .then(data => {
+        console.timeEnd('fetching data');
+        console.log(data);
+      });
+
+    
+
+  </script>
+</body>
+</html>
