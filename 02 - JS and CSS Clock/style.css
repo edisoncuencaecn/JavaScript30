@@ -1,0 +1,78 @@
+
+  html {
+      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+    .title{
+      position: relative;
+      color: lightgreen;
+    }
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+    .clock-face {
+      position: relative; /* to a parent of .hand */
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+      /*transform: scaleY(0.9); /* make handlers smaller, but make the numbers circle as well */
+    }
+     .hand {
+      width: 50%; /* make the axe for handlers in the center of the clock */
+      /* height: 6px; to make handlers ticker/thinner depending of the handler */
+      /* background: blue; black; created instead .handSecondColor, .handMinColor & .handHourColor */
+      position: absolute; /* to be a child of .clock-face */
+      top: 50%;
+      transform-origin: 100%;  /* To place the rotation origin or axis of the h,m,s clock handlers to the center*/
+      transform: rotate(90deg); /* To place the handlers starting at 12 o'clock position */
+      transition: all 0.5s; /* to move/rotate every 20 degres*/
+      /* Changed to attenuate cubic-bezier(0.1, 2.7, 0.58, 1); transition due to makes seconds handler blicks when its w/classList.toogle is inserted back in the div after it's been removed w/classList.remove */
+      /*transition-timing-function: cubic-bezier(0.1, 0.7, 1.0, 0.1);*/ /* to make the handlers ticking move forwards and backwords*/
+      /*
+      cubic-bezier values for a desired transition easing effect, but now you don't have to, as Google Chrome 42.x.x introduced the much-awaited cubic-bezier editor directly in the Chrome Devtools!
+      cubic-bezier.com cubic-bezier(x1, y1, x2, y2) animation from point 1 to 2.
+      */
+      
+    }
+    .hour-hand {
+      background: lightgreen; /* To change handler color */
+      height: 8px; /* makes handler thinner/thicker */
+      width: 40%; /* makes the handler smaller*/
+      left: 10%; /* Since it is absolutely positioned, you can use left to set it correctly, because when you decrease the width, it's moving to the left.*/
+    }
+     .min-hand {
+      background: cyan;
+      height: 6px; /* makes handler thinner/thicker */
+      width: 45%;
+      right: 50%;
+    }
+    .second-hand {
+      background: darkgray;
+      height: 4px; /* makes handler thinner/thicker */
+    }
+    .handStop {
+      transform-origin: 100%;  /* To place the rotation origin or axis of the h,m,s clock handlers to the center*/
+      transform: rotate(none); /* To stop the handlers starting at 12 o'clock position */
+    }

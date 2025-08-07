@@ -17,12 +17,12 @@
       </div>
       <br>
       <br>
-      <div class="title"><h2>JS + CSS Clock + By Edison Fixed Rotation handlers + Colored-Sized handlers</h2></div>
-      </div>
+      <div class="title"><h2>JS + CSS Clock + By Edison Added Numbers + Fixed Rotation + Colored-Sized handlers</h2></div>  
+    </div>
     </div>
   
     <style lang="scss" scoped>
-         @import '../style.css';
+         @import '../style3.css';
     </style>
     
   <script>
@@ -98,6 +98,41 @@
           this.classList.toggle('hour-hand'); /* adds class hour .hand from the respective div */
         };
     }
+     /* CANVAS
+    https://www.w3schools.com/graphics/canvas_intro.asp
+    https://www.w3schools.com/jsref/api_canvas.asp
+    https://www.w3schools.com/jsref/canvas_font.asp
+    https://www.w3schools.com/jsref/playcanvas.php?filename=playcanvas_fontweight
+    */
+    const canvas = document.getElementById('clockCanvas');
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = Math.min(centerX, centerY) * 0.85; // Adjust radius as needed
+
+    function drawNumbers() {
+        ctx.font = 'bold 30px Arial'; // Set font style
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'black'; // Set color for numbers
+        //ctx.direction = 'ltr'; // rtl
+        const degrees = '90';
+        
+        for (let i = 1; i <= 12; i++) {
+            const angle = (i * Math.PI / 6) - (Math.PI / 2); // Calculate angle for each number (adjust for 12 o'clock at top)
+            const x = centerX + radius * 0.85 * Math.cos(angle); // Adjust 0.85 for distance from center
+            const y = centerY + radius * 0.85 * Math.sin(angle);
+            
+            if (i===3 || i===9) {
+              //i.style.transform = (`rotate(${degrees}deg)`);
+              
+            };
+            
+            ctx.fillText(i, x, y);
+        }
+    }
+
+    drawNumbers(); // Call the function to draw the numbers
   </script>
 </body>
 </html>

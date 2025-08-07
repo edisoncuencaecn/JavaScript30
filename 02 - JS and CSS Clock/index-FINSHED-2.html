@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock + By Edison Added Numbers + Fixed Rotation</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+
+   
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+        <div>
+         <canvas id="clockCanvas" class = "clock-numbers" width="400" height="400"></canvas>
+        </div>
+      </div>
+      <br>
+      <br>
+      <div class="title"><h2>JS + CSS Clock + By Edison Added Numbers + Fixed Rotation + Colored-Sized handlers</h2></div>
+      <!--div class="clock-numbers">
+        <div class="number number1">12</div>
+        <div class="number number3">3</div>
+        <div class="number number6">6</div>
+        <div class="number number9">9</div-->
+      </div>
+    </div>
+     
+
+
+  <style>
+    html {
+      background: #018DED url(https://unsplash.it/1500/1000?image=881&blur=5);
+      background-size: cover;
+      font-family: 'helvetica neue';
+      text-align: center;
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      font-size: 2rem;
+      display: flex;
+      flex: 1;
+      min-height: 100vh;
+      align-items: center;
+    }
+    .title{
+      position: relative;
+      color: lightgreen;
+    }
+
+    .clock {
+      width: 30rem;
+      height: 30rem;
+      border: 20px solid white;
+      border-radius: 50%;
+      margin: 50px auto;
+      position: relative;
+      padding: 2rem;
+      box-shadow:
+        0 0 0 4px rgba(0,0,0,0.1),
+        inset 0 0 0 3px #EFEFEF,
+        inset 0 0 10px black,
+        0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .clock-face {
+      position: relative; /* to a parent of .hand */
+      width: 100%;
+      height: 100%;
+      transform: translateY(-3px); /* account for the height of the clock hands */
+      /*transform: scaleY(0.9); /* make handlers smaller, but make the numbers circle as well */
+    }
+
+     .hand {
+      width: 50%; /* make the axe for handlers in the center of the clock */
+      /* height: 6px; to make handlers ticker/thinner depending of the handler */
+      /* background: blue; black; created instead .handSecondColor, .handMinColor & .handHourColor */
+      position: absolute; /* to be a child of .clock-face */
+      top: 50%;
+      transform-origin: 100%;  /* To place the rotation origin or axis of the h,m,s clock handlers to the center*/
+      transform: rotate(90deg); /* To place the handlers starting at 12 o'clock position */
+      transition: all 0.5s; /* to move/rotate every 20 degres*/
+     /* Changed to attenuate cubic-bezier(0.1, 2.7, 0.58, 1); transition due to makes seconds handler blicks when its w/classList.toogle is inserted back in the div after it's been removed w/classList.remove */
+      transition-timing-function: cubic-bezier(0.1, 0.7, 1.0, 0.1); /* to make the handlers ticking move forwards and backwords*/
+      /*
+      cubic-bezier values for a desired transition easing effect, but now you don't have to, as Google Chrome 42.x.x introduced the much-awaited cubic-bezier editor directly in the Chrome Devtools!
+      cubic-bezier.com cubic-bezier(x1, y1, x2, y2) animation from point 1 to 2.
+      */
+      
+    }
+    .hour-hand {
+      background: lightgreen; /* To change handler color */
+      height: 8px; /* makes handler thinner/thicker */
+      width: 40%; /* makes the handler smaller*/
+      left: 10%; /* Since it is absolutely positioned, you can use left to set it correctly, because when you decrease the width, it's moving to the left.*/
+    }
+
+     .min-hand {
+      background: cyan;
+      height: 6px; /* makes handler thinner/thicker */
+      width: 45%;
+      right: 50%;
+    }
+
+    .second-hand {
+      background: darkgray;
+      height: 4px; /* makes handler thinner/thicker */
+    }
+
+    .handNumbers {
+      background: black;
+      position: absolute; /* to be a child of .clock-face */
+     
+    }
+
+    .handStop {
+      transform-origin: 100%;  /* To place the rotation origin or axis of the h,m,s clock handlers to the center*/
+      transform: rotate(none); /* To stop the handlers starting at 12 o'clock position */
+    }
+
+    .clock-numbers {
+        position: absolute; /* to be a child of .clock-face */
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        text-align: center;
+        top: -15%; /* To move numbers circle veryically */
+        left:-16%; /* To move numbers circle horizontally */
+        /* ... other styling for clock face ... */
+    }
+
+    .number {
+        position: absolute; /* to be a child of .clock-face */
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        /* Adjust font-size, color, etc. */
+    }
+
+   /* Adjust based on desired starting point and number of divisions 
+    .number12 { transform: rotate(0deg); 
+    }
+    .number3 { transform: rotate(90deg);  
+    }
+    .number6 { transform: rotate(180deg); 
+    }
+    .number9 { transform: rotate(270deg); 
+    }
+  */
+
+  </style>
+    
+  <script>
+    /* to find the respective h,m,s animation CSS class*/
+    const secondsHand = document.querySelector('.second-hand');
+    const minsHand = document.querySelector('.min-hand');
+    const hoursHand = document.querySelector('.hour-hand');
+    console.log(`secondsHand: ${secondsHand}`); //objects HTMLDivElement class
+   
+    /* provides the time h,m,s*/
+    function setDate(){
+      const now = new Date();
+      const seconds = now.getSeconds();
+      // to convert time into degress 0 hms = 0 deg, 12 hms = 360 deg
+      var secondsDegrees = ((seconds /60) * 360) + (seconds === 60 || seconds === 0 ? 0 : 90); // + 90 to upset the rotation start point at 12 o'clock
+       // To listen for a transition change event on each of the transform rotate when it is changed then execute the respective function
+      if (secondsDegrees === 0) { /* at 0 seconds the handler rotates 90deg before to continue, therefore I have to remove this event before to start*/
+         console.log(`seconds 0: ${seconds}, secondsDegrees 0: ${secondsDegrees}`); //0 seconds & 0 secondsDegress
+         secondsHand.addEventListener('transitionstart', handleTransformSecond); /* function reference to execute it once event is to start, function() will run it during page load*/
+      } else {
+          //console.log(`seconds: ${seconds}, secondsDegrees: ${secondsDegrees}`); 
+          secondsHand.style.transform = (`rotate(${secondsDegrees}deg)`);
+      }
+      const mins = now.getMinutes();
+      var minsDegrees = ((mins /60) * 360) + (mins === 60 || mins === 0 ? 0 : 90);
+      if (minsDegrees === 0) {/* at 0 seconds the handler rotates 90deg before to continue, therefore I have to remove this event before to start*/
+         console.log(`mins 0: ${mins}, minDegrees 0: ${minsDegrees}`); //
+         secondsHand.addEventListener('transitionstart', handleTransformMin); /* function reference to execute it once event is to start, function() will run it during page load*/
+      } else {
+        minsHand.style.transform = (`rotate(${minsDegrees}deg)`);
+      }
+
+      const hours = now.getHours();
+      var hoursDegrees = ((hours /12) * 360) + (hours === 12 ? 0 : 90);
+   
+      if (hoursDegrees === 0){/* at 0 seconds the handler rotates 90deg before to continue, therefore I have to remove this event before to start*/
+         console.log(`hours 0: ${mins}, hoursDegrees 0: ${hoursDegrees}`); //
+         secondsHand.addEventListener('transitionstart', handleTransformHour); /* function reference to execute it once event is to start, function() will run it during page load*/
+      } else {
+        hoursHand.style.transform = (`rotate(${hoursDegrees}deg)`);
+      }
+
+    }
+    setInterval(setDate, 1000); 
+
+    function handleTransformSecond(e) {
+        console.log(`this: ${this}`) // object HTMLElement
+        const classAttr = this.getAttribute("class"); 
+        console.log(`classAttr: ${classAttr}`); // Output: "hand second-hand or hand nim-hand or hour-hand"
+   
+        console.log(`event: ${e}`); /* hand second-hand or hand nim-hand or hour-hand */
+        console.log(`propertyName: ${e.propertyName}`); /* to see which event or transition is running when "transform" which is the only transition */
+        /* checks which classAttr is running to remove respective class from the div*/
+        if(classAttr.includes('second')){
+          this.classList.remove('second-hand'); /* removes class second .hand from the respective div */
+        } else if(classAttr.includes('min')) {
+          this.classList.remove('min-hand'); /* removes class min .hand from the respective div */
+        } else if(classAttr.includes('hour')) {
+          this.classList.remove('hour-hand'); /* removes class hour .hand from the respective div */
+        };
+
+
+        this.classList.remove('hand');
+        this.classList.toggle('handStop'); /* will add class .handStop to the respective div */
+      
+        const computedStyle = window.getComputedStyle(this); 
+        console.log(`computedStyle: ${computedStyle}`); //object CSSStyleDeclaration
+        const handTransform = computedStyle.transform; // get classAttr transform property
+        console.log(`handTransform: ${handTransform}`);
+        // or
+        //const handTransform2 = computedStyle.getPropertyValue('transform');
+        //console.log(`handTransform2: ${handTransform2}`); //
+        document.documentElement.style.setProperty('transform', 'rotate(none)', 'important'); //transform is not updated?
+        const handTransform3 = computedStyle.getPropertyValue('transform');
+        console.log(`handTransform3: ${handTransform3}`);
+        /* removes the the respective event listener whih was created only when either seconds or mins or hours === 0 */
+        secondsHand.removeEventListener('transitionstart', handleTransformSecond);
+        this.classList.remove('handStop');
+        this.classList.toggle('hand'); /* will add class .hand to the respective div */
+        /* checks which classAttr is running to toggle/add the respective class in the div*/
+        if(classAttr.includes('second')){
+          this.classList.toggle('second-hand'); /* will add class .hand from the respective div */
+        } else if(classAttr.includes('min')) {
+          this.classList.toggle('min-hand'); /* adds class min .hand from the respective div */
+        } else if(classAttr.includes('hour')) {
+          this.classList.toggle('hour-hand'); /* adds class hour .hand from the respective div */
+        };
+    }
+
+        function handleTransformMin(e) {
+        console.log(`this: ${this}`) // object HTMLElement
+        const classAttr = this.getAttribute("class"); 
+        console.log(`classAttr: ${classAttr}`); // Output: "hand second-hand or hand nim-hand or hour-hand"
+   
+        console.log(`event: ${e}`); /* hand second-hand or hand nim-hand or hour-hand */
+        console.log(`propertyName: ${e.propertyName}`); /* to see which event or transition is running when "transform" which is the only transition */
+        /* checks which classAttr is running to remove respective class from the div*/
+        if(classAttr.includes('second')){
+          this.classList.remove('second-hand'); /* removes class second .hand from the respective div */
+        } else if(classAttr.includes('min')) {
+          this.classList.remove('min-hand'); /* removes class min .hand from the respective div */
+        } else if(classAttr.includes('hour')) {
+          this.classList.remove('hour-hand'); /* removes class hour .hand from the respective div */
+        };
+
+
+        this.classList.remove('hand');
+        this.classList.toggle('handStop'); /* will add class .handStop to the respective div */
+      
+        const computedStyle = window.getComputedStyle(this); 
+        console.log(`computedStyle: ${computedStyle}`); //object CSSStyleDeclaration
+        const handTransform = computedStyle.transform; // get classAttr transform property
+        console.log(`handTransform: ${handTransform}`);
+        // or
+        //const handTransform2 = computedStyle.getPropertyValue('transform');
+        //console.log(`handTransform2: ${handTransform2}`); //
+        document.documentElement.style.setProperty('transform', 'rotate(none)', 'important'); //transform is not updated?
+        const handTransform3 = computedStyle.getPropertyValue('transform');
+        console.log(`handTransform3: ${handTransform3}`);
+        /* removes the the respective event listener whih was created only when either seconds or mins or hours === 0 */
+        secondsHand.removeEventListener('transitionstart', handleTransformMin);
+        this.classList.remove('handStop');
+        this.classList.toggle('hand'); /* will add class .hand to the respective div */
+        /* checks which classAttr is running to toggle/add the respective class in the div*/
+        if(classAttr.includes('second')){
+          this.classList.toggle('second-hand'); /* will add class .hand from the respective div */
+        } else if(classAttr.includes('min')) {
+          this.classList.toggle('min-hand'); /* adds class min .hand from the respective div */
+        } else if(classAttr.includes('hour')) {
+          this.classList.toggle('hour-hand'); /* adds class hour .hand from the respective div */
+        };
+    }
+
+        function handleTransformHour(e) {
+        console.log(`this: ${this}`) // object HTMLElement
+        const classAttr = this.getAttribute("class"); 
+        console.log(`classAttr: ${classAttr}`); // Output: "hand second-hand or hand nim-hand or hour-hand"
+   
+        console.log(`event: ${e}`); /* hand second-hand or hand nim-hand or hour-hand */
+        console.log(`propertyName: ${e.propertyName}`); /* to see which event or transition is running when "transform" which is the only transition */
+        /* checks which classAttr is running to remove respective class from the div*/
+        if(classAttr.includes('second')){
+          this.classList.remove('second-hand'); /* removes class second .hand from the respective div */
+        } else if(classAttr.includes('min')) {
+          this.classList.remove('min-hand'); /* removes class min .hand from the respective div */
+        } else if(classAttr.includes('hour')) {
+          this.classList.remove('hour-hand'); /* removes class hour .hand from the respective div */
+        };
+
+
+        this.classList.remove('hand');
+        this.classList.toggle('handStop'); /* will add class .handStop to the respective div */
+      
+        const computedStyle = window.getComputedStyle(this); 
+        console.log(`computedStyle: ${computedStyle}`); //object CSSStyleDeclaration
+        const handTransform = computedStyle.transform; // get classAttr transform property
+        console.log(`handTransform: ${handTransform}`);
+        // or
+        //const handTransform2 = computedStyle.getPropertyValue('transform');
+        //console.log(`handTransform2: ${handTransform2}`); //
+        document.documentElement.style.setProperty('transform', 'rotate(none)', 'important'); //transform is not updated?
+        const handTransform3 = computedStyle.getPropertyValue('transform');
+        console.log(`handTransform3: ${handTransform3}`);
+        /* removes the the respective event listener whih was created only when either seconds or mins or hours === 0 */
+        secondsHand.removeEventListener('transitionstart', handleTransformHour);
+        this.classList.remove('handStop');
+        this.classList.toggle('hand'); /* will add class .hand to the respective div */
+        /* checks which classAttr is running to toggle/add the respective class in the div*/
+        if(classAttr.includes('second')){
+          this.classList.toggle('second-hand'); /* will add class .hand from the respective div */
+        } else if(classAttr.includes('min')) {
+          this.classList.toggle('min-hand'); /* adds class min .hand from the respective div */
+        } else if(classAttr.includes('hour')) {
+          this.classList.toggle('hour-hand'); /* adds class hour .hand from the respective div */
+        };
+    }
+    /* CANVAS
+    https://www.w3schools.com/graphics/canvas_intro.asp
+    https://www.w3schools.com/jsref/api_canvas.asp
+    https://www.w3schools.com/jsref/canvas_font.asp
+    https://www.w3schools.com/jsref/playcanvas.php?filename=playcanvas_fontweight
+    */
+    const canvas = document.getElementById('clockCanvas');
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = Math.min(centerX, centerY) * 0.85; // Adjust radius as needed
+
+    function drawNumbers() {
+        ctx.font = 'bold 30px Arial'; // Set font style
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'black'; // Set color for numbers
+        //ctx.direction = 'ltr'; // rtl
+        const degrees = '90';
+        
+        for (let i = 1; i <= 12; i++) {
+            const angle = (i * Math.PI / 6) - (Math.PI / 2); // Calculate angle for each number (adjust for 12 o'clock at top)
+            const x = centerX + radius * 0.85 * Math.cos(angle); // Adjust 0.85 for distance from center
+            const y = centerY + radius * 0.85 * Math.sin(angle);
+            
+            if (i===3 || i===9) {
+              //i.style.transform = (`rotate(${degrees}deg)`);
+              
+            };
+            
+            ctx.fillText(i, x, y);
+        }
+    }
+
+    drawNumbers(); // Call the function to draw the numbers
+
+  </script>
+</body>
+</html>
