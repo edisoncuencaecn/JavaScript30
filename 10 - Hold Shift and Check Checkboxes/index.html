@@ -7,55 +7,12 @@
 </head>
 <body>
   <style>
-
-    html {
-      font-family: sans-serif;
-      background: #ffc600;
-    }
-
-    .inbox {
-      max-width: 400px;
-      margin: 50px auto;
-      background: white;
-      border-radius: 5px;
-      box-shadow: 10px 10px 0 rgba(0,0,0,0.1);
-    }
-
-    .item {
-      display: flex;
-      align-items: center;
-      border-bottom: 1px solid #F1F1F1;
-    }
-
-    .item:last-child {
-      border-bottom: 0;
-    }
-
-    input:checked + p {
-      background: #F9F9F9;
-      text-decoration: line-through;
-    }
-
-    input[type="checkbox"] {
-      margin: 20px;
-    }
-
-    p {
-      margin: 0;
-      padding: 20px;
-      transition: background 0.2s;
-      flex: 1;
-      font-family:'helvetica neue';
-      font-size: 20px;
-      font-weight: 200;
-      border-left: 1px solid #D1E2FF;
-    }
+   @import './style.css';
+   
   </style>
    <!--
    The following is a common layout you would see in an email client.
-
    When a user clicks a checkbox, holds Shift, and then clicks another checkbox a few rows down, all the checkboxes inbetween those two checkboxes should be checked.
-
   -->
   <div class="inbox">
     <div class="item">
@@ -97,6 +54,25 @@
   </div>
 
 <script>
+  const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]'); /* To listen to all the list's items input[type="checkbox"]*/
+  let lastCheck; /* to log the 'lastcheck' is the first checked up item not holding down shift key, we need to know which one was  */
+  function handleCheck(e) {/* e is the input click event */
+    let inBetween = false;
+    if (e.shiftKey && this.checked) {/* Check if the input check up event has the key shift down, not unchecked*/
+      /* we loop over all items looking for the first checked up item and last checked up held down item, so we can determine the items 'inBetween' to be checked up too*/
+      checkboxes.forEach(checkbox => {
+        if (checkbox === this || checkbox ===lastCheck) { /* 'this' is the last checked up item holding down the shift key, 'lastcheck' is the first checked up item not holding down shift key*/
+          inBetween = !inBetween; /* to true */
+        };
+        if(inBetween){
+          checkbox.checked = true;
+        };
+      });
+    };
+   lastCheck = this; /* this is <input type="checkbox"> , last checked up item holding down th shift key*/
+   console.log(`This: ${this}`);
+  };
+  checkboxes.forEach(checkbox => checkbox.addEventListener('click',handleCheck)); /* Create a listening event per input item looking for one click or one change, 'click' will trigger only when the keyboard is used */
 </script>
 </body>
 </html>
