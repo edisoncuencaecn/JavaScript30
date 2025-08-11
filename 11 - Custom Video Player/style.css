@@ -106,7 +106,7 @@ body {
 
 /* unholy css to style input type="range" */
 
-input[type=range] {
+input[type=range] { /* styles slider control that allows users to select a value within a specified range*/
   -webkit-appearance: none;
   background: transparent;
   width: 100%;
