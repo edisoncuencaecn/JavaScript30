@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Input Key Sequence Detection </title>
+    <script type="text/javascript" src="./cornify.js"></script>
+    <link rel="icon" href="https://fav.farm/🔥" />
+  </head>
+  <body>
+    <script>
+      /* keyup event is a type of KeyboardEvent that is fired when a key on the keyboard is released. 
+      keydown (fired when a key is pressed down) and keypress (fired when a key producing a character value is pressed)
+      */
+      const pressed = [];
+      const secretCode = 'wesbos';
+      window.addEventListener('keyup', (e) => { 
+        pressed.push(e.key); /* ['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown', 'Enter', 'Backspace', 'a', 'a', 's']*/
+        pressed.splice(-secretCode.length -1, pressed.length - secretCode.length);/* 'splice' changes the contents of an array by removing or replacing existing elements and/or adding new elements in place.*/
+        if(pressed.join('').includes(secretCode)){/* 'join' converts an array into a string and content check for secretCode word*/
+          console.log('array includes the secretCode');
+          cornify_add();/* translate letters into images*/
+        }
+      });
+    </script>
+  </body>
+</html>
