@@ -54,6 +54,11 @@
   </div>
 
 <script>
+  
+/* The html element event listeners, where 'e' represents the event object in the function, which is automatically passed to 
+the triggered function when a specific event is triggered such as 'click', 'keypress', 'mousemove', range sliders(name, value) 'change' which contains valuable info such as
+'target html element', 'mouse coordinates', 'key pressed' by referring to them via 'this.' inside of the function. */
+
   const checkboxes = document.querySelectorAll('.inbox input[type="checkbox"]'); /* To listen to all the list's items input[type="checkbox"]*/
   let lastCheck; /* to log the 'lastcheck' is the first checked up item not holding down shift key, we need to know which one was  */
   function handleCheck(e) {/* e is the input click event */
