@@ -37,7 +37,7 @@
     }
 
     .slide-in {
-      opacity: 0;  /* To hide the images temprarely */
+      opacity: 0;  /* To hide the images temporarely */
       transition: all .5s;
     }
 
