@@ -83,3 +83,12 @@ all of which are contained within an element having the class plates. unchecked 
   border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
+.delete-items {
+  margin-top: 20px;
+}
+
+.delete-items input {
+  padding: 10px;
+  outline: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
