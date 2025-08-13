@@ -42,6 +42,8 @@
       position: absolute; /* to be a child of .clock-face */
       top: 50%;
       transform-origin: 100%;  /* To place the rotation origin or axis of the h,m,s clock handlers to the center*/
+      /*transform: rotate(90deg); /* To place the handlers starting at 12 o'clock position */
+      /*transition: all 0.5s; /* to move/rotate every 20 degres*/
     }
     .hour-hand {
       transform: rotate(90deg); /* To place the handlers starting at 12 o'clock position */
@@ -61,5 +63,22 @@
       background: darkgray;
       height: 4px; /* makes handler thinner/thicker */
     }
+     .clock-numbers {
+        position: absolute; /* to be a child of .clock-face */
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        text-align: center;
+        top: -15%; /* To move numbers circle veryically */
+        left:-16%; /* To move numbers circle horizontally */
+        /* ... other styling for clock face ... */
+    }
+    .number {
+        position: absolute; /* to be a child of .clock-face */
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        /* Adjust font-size, color, etc. */
+    }
+ 
 
-  

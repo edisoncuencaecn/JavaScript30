@@ -42,10 +42,10 @@
       position: absolute; /* to be a child of .clock-face */
       top: 50%;
       transform-origin: 100%;  /* To place the rotation origin or axis of the h,m,s clock handlers to the center*/
-    }
-    .hour-hand {
       transform: rotate(90deg); /* To place the handlers starting at 12 o'clock position */
       transition: all 0.5s; /* to move/rotate every 20 degres*/
+    }
+    .hour-hand {
       background: lightgreen; /* To change handler color */
       height: 8px; /* makes handler thinner/thicker */
       width: 40%; /* makes the handler smaller*/
@@ -61,5 +61,7 @@
       background: darkgray;
       height: 4px; /* makes handler thinner/thicker */
     }
-
-  
+    .handStop {
+      transform-origin: 100%;  /* To place the rotation origin or axis of the h,m,s clock handlers to the center*/
+      transform: rotate(none); /* To stop the handlers starting at 12 o'clock position */
+    }

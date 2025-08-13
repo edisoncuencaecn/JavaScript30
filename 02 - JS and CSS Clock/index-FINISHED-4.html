@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock + By Edison Added Numbers + Fixed Rotation</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="clock">
+      <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+        <div>
+         <canvas id="clockCanvas" class = "clock-numbers" width="400" height="400"></canvas>
+        </div>
+      </div>
+      <br>
+      <div class="title"><h2>JS + CSS Clock + By Edison Fixed Rotation handlers + Colored-Sized handlers</h2></div>
+      </div>
+    </div>
+  <script>
+    const secondsHand = document.querySelector('.second-hand');
+    const minsHand = document.querySelector('.min-hand');
+    const hoursHand = document.querySelector('.hour-hand');
+    let now = new Date(2025,8,7,11,59,58); 
+    function setDate(){
+      now.setSeconds(now.getSeconds() + 1);
+      const seconds = now.getSeconds();
+      const secondsDegrees = ((seconds /60) * 360) + (seconds === 0 ? 0 : 90); // + 90 to upset the rotation start point at 12 o'clock
+      if (secondsDegrees === 0) { /* at 0 seconds the handler rotates 90deg before to continue, therefore I have to remove this event before to start*/
+        secondsHand.addEventListener('transitionstart', handleTransform); /* function reference to execute it once event is to start, function() will run it during page load*/
+      } else {
+        secondsHand.style.transform = (`rotate(${secondsDegrees}deg)`);
+      }
+      const mins = now.getMinutes();
+      const minsDegrees = ((mins /60) * 360) + ((seconds/60)*6) + (mins === 0 && seconds === 0 ? 0 : 90); /* && seconds === 0 condition is added to avoid the mins handler to add 0 after the min-hand is removed at 0 mins*/
+      if (minsDegrees === 0 && secondsDegrees === 0) {/* at 0 mins the handler rotates 90deg before to continue, therefore I have to remove this event before to start*/
+        minsHand.addEventListener('transitionstart', handleTransform); /* function reference to execute it once event is to start, function() will run it during page load*/
+     } else {
+        minsHand.style.transform = (`rotate(${minsDegrees}deg)`);
+      }
+      const hours = now.getHours();
+      const hoursDegrees = ((hours /12) * 360) + ((mins/60)*30) + 90;//(hours === 12 ? 0 : 90);
+      if (hoursDegrees === 0){/* at 0 hours the handler rotates 90deg before to continue, therefore I have to remove this event before to start*/
+         //hoursHand.addEventListener('transitionstart', handleTransform); /* function reference to execute it once event is to start, function() will run it during page load*/
+      } else {
+          hoursHand.style.transform = (`rotate(${hoursDegrees}deg)`);
+      }
+    }
+    setInterval(setDate, 1000); 
+    
+    function handleTransform(e) {
+        const classAttr = this.getAttribute("class"); 
+        if(classAttr.includes('second-hand')){
+          this.classList.remove('second-hand'); // removes class second .hand from the respective div 
+        } else if(classAttr.includes('min-hand')) {
+          this.classList.remove('min-hand'); // removes class min .hand from the respective div 
+        } else if(classAttr.includes('hour-hand')) {
+          this.classList.remove('hour-hand'); // removes class hour .hand from the respective div 
+        };
+        this.classList.remove('hand');
+        this.classList.toggle('handStop'); // will add class .handStop to the respective div 
+        const computedStyle = window.getComputedStyle(this); 
+        const handTransform = computedStyle.transform; // get classAttr transform property
+        if(classAttr.includes('second-hand')){
+           secondsHand.removeEventListener('transitionstart', handleTransform);
+        } else if(classAttr.includes('min-hand')) {
+           minsHand.removeEventListener('transitionstart', handleTransform);
+        } else if(classAttr.includes('hour-hand')) {
+           hoursHand.removeEventListener('transitionstart', handleTransform);
+        };
+        this.classList.remove('handStop');
+        this.classList.toggle('hand'); // will add class .hand to the respective div 
+        if(classAttr.includes('second-hand')){
+          this.classList.toggle('second-hand'); // will add class .hand from the respective div 
+        } else if(classAttr.includes('min-hand')) {
+          this.classList.toggle('min-hand'); // adds class min .hand from the respective div 
+        } else if(classAttr.includes('hour-hand')) {
+          this.classList.toggle('hour-hand'); // adds class hour .hand from the respective div 
+        };
+    }
+  </script>
+</body>
+</html>

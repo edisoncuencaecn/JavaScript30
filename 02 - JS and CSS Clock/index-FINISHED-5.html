@@ -31,16 +31,40 @@
       const secondsDegrees = ((seconds /60) * 360) + (seconds === 0 ? 0 : 90); // + 90 to upset the rotation start point at 12 o'clock
       if (secondsDegrees === 0) { /* at 0 seconds the handler rotates 90deg before to continue, therefore I have to hide it before to start*/
         secondsHand.classList.remove('second-hand');
+        /*
+        secondsHand.style.setProperty('opacity','0'); 
+        secondsHand.style.setProperty('scale','0.01');
+        secondsHand.style.setProperty('transition','none'); 
+        */
+        //secondsHand.style.transform = (`rotate(${'1'}deg)`);
+        
       } else {
         secondsHand.classList.add('second-hand');
+        /*
+        secondsHand.style.setProperty('opacity','1'); 
+        secondsHand.style.setProperty('scale','1');
+        secondsHand.style.setProperty('transition','all 0.5s'); 
+        */
         secondsHand.style.transform = (`rotate(${secondsDegrees}deg)`);
       }
       const mins = now.getMinutes();
       const minsDegrees = ((mins /60) * 360) + ((seconds/60)*6) + (mins === 0 && seconds === 0 ? 0 : 90); /* && seconds === 0 condition is added to avoid the mins handler to add 0 after the min-hand is removed at 0 mins*/
       if (minsDegrees === 0 && secondsDegrees === 0) {/* at 0 mins the handler rotates 90deg before to continue, therefore I have to hide it before to start*/
         minsHand.classList.remove('min-hand');
+        /*
+        minsHand.style.setProperty('opacity','0');  
+        minsHand.style.setProperty('scale','0.01');
+        minsHand.style.setProperty('transition','none'); 
+        */
+        //minsHand.style.transform = (`rotate(${'1'}deg)`);
+        
       } else {
         minsHand.classList.add('min-hand');
+        /*
+        minsHand.style.setProperty('opacity','1'); 
+        minsHand.style.setProperty('scale','1');
+        minsHand.style.setProperty('transition','all 0.5s');
+        */
         minsHand.style.transform = (`rotate(${minsDegrees}deg)`);
       }
       const hours = now.getHours();
@@ -50,8 +74,35 @@
       }
     }
     setInterval(setDate, 1000); 
+     /* CANVAS
+    https://www.w3schools.com/graphics/canvas_intro.asp
+    https://www.w3schools.com/jsref/api_canvas.asp
+    https://www.w3schools.com/jsref/canvas_font.asp
+    https://www.w3schools.com/jsref/playcanvas.php?filename=playcanvas_fontweight
+    */
+    const canvas = document.getElementById('clockCanvas');
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = Math.min(centerX, centerY) * 0.85; // Adjust radius as needed
+    function drawNumbers() {
+        ctx.font = 'bold 30px Arial'; // Set font style
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = 'black'; // Set color for numbers
+        //ctx.direction = 'ltr'; // rtl
+        const degrees = '90';
+        for (let i = 1; i <= 12; i++) {
+            const angle = (i * Math.PI / 6) - (Math.PI / 2); // Calculate angle for each number (adjust for 12 o'clock at top)
+            const x = centerX + radius * 0.85 * Math.cos(angle); // Adjust 0.85 for distance from center
+            const y = centerY + radius * 0.85 * Math.sin(angle);
+            if (i===3 || i===9) {
+              //i.style.transform = (`rotate(${degrees}deg)`);
+            };
+            ctx.fillText(i, x, y);
+        }
+    }
+    drawNumbers(); // Call the function to draw the numbers
   </script>
 </body>
 </html>
-
-

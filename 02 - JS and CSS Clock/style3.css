@@ -118,3 +118,13 @@
     .number9 { transform: rotate(270deg); 
     }
   */
+    .second-hand.hide {
+      opacity: 0;
+    }
+    .min-hand.hide {
+      opacity: 0;
+    }
+
+    .hour-hand.hide {
+      opacity: 0;
+    }
