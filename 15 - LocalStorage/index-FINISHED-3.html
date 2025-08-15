@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>LocalStorage</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="styleCheckBox.css">
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
 <body>
@@ -31,6 +32,17 @@
     <form class="delete-items"> <!--To delete plates-->
       <button id= "deleteButton" type="button">Delete All Checked</button>
     </form>
+    <!--Check items-->
+    <!--1.- form class="check-items"></form>
+      <input type="checkbox" id="deleteCheckBox" name="deleteCheckBox" value="yes">
+      <label for="deleteCheckBox">Check/Uncheck All</label-->
+      
+
+      <!--2.- label class="container" for="deleteCheckBox">Check/Uncheck All
+          <input type="checkbox" id="deleteCheckBox" name="deleteCheckBox" value="yes">
+          <span class="checkmark"></span>
+      </label-->
+    <!--/form-->
   </div>
 <script>
   /* to persist state add-items with local storage & using event delegation allows addEventListener() to inexistent element*/
@@ -46,6 +58,7 @@
    
   function addItem(e){
     e.preventDefault();//prevents the browse page for reloading as default behaviour to send to SSR the from to an ext.source.
+    /* To place the added item in an object where 'this' is the actual form, then reading the 'name' attribute [name=item]*/
     const text = (this.querySelector('[name=item]')).value; //wrapping () it will execute first and then get the input value
     const item = {
       text,// it means 'text: text',
@@ -54,10 +67,21 @@
     items.push(item); //adds the new item' as the last elemnt into the array 'items', unshift will add it as first element
     populateList(items, itemsList);//converts the object into html
 
+    /* temporarely sample
+    const checkBoxes = document.queryselectorall('input');
+    checkBoxes.forEach(input => input.addEventListener('click', () => alert('hi')));
+    */
+    /* browser JSON.stringify() coverts objects into json formated arrays */
+    /* browser JSON.parse() converts JSON formatted arrays into array of objects */
     localStorage.setItem('items',JSON.stringify(items));// sets the items into browser 'strings' localStorage: setItem(key,data), getItem, removeItem
     this.reset(); //reset the form
   }
 
+  /* to create the respective items list html 'platesList', plates = [] crates its own function list to avoid break code when nothig is input.
+   uses its own array 'plates[]' to make resilian and isolated from ext. 'items[]', platesList is where html will be placed
+   looping into all the mapped array elements and using 'innerHTML' and 'ticks' to convert the string into HTML.
+   'map' will take the array of objects 'items[]'' and return a string of it using 'join()'' to convert the returned array to big string.
+   */
   function populateList(plates = [], platesList){
     platesList.innerHTML = plates.map((plate, i) => {
       return `
@@ -69,45 +93,113 @@
     }).join('');
   }
 
+  /* to persist the checked items regardless of the browser page refreshed with 'event delegation'
+  which rather than listen for a click/change in the existing checkboxes directly, we look for something
+  which is going to be on the page at the time of listening, then we will listen for a click on class '.plates'
+  which exists and holds the uo list <ul><\ul> and figure out if they need to click one of the input inside of it.
+  So we will pass from the class '.pales' 'itemlist' the click to its children <ul><li><li/><ul/> 
+  who will handle the click in the future as follows:
+  */
   function toggleDone(e) {
     if(!e.target.matches('input')) return; //skip this unless it's an input
     const e1 = e.target; //e1 is the item index
+    //console.log(e);
     const index = e1.dataset.index;
+    //console.log(e1.dataset.index);
     items[index].done = !items[index].done;//toggle the item from checked to uncheck or vice
     localStorage.setItem('items',JSON.stringify(items));//persist the items
     populateList(items, itemsList);//update the itemList display
   }
-
   addItems.addEventListener('submit', addItem);// to listen for new entries/items submit to addItems
   itemsList.addEventListener('click',toggleDone);
+  
+  /* display current items*/
   populateList(items, itemsList);
   const deleteItems = document.querySelector('.delete-items')
   deleteItems.addEventListener('click',deleteCheckedItems);
 
   function deleteCheckedItems(){
+    console.table(items);
     const itemsToRemove = items.filter(item => item.done === true); // to delete all item.done === true
+    console.table(itemsToRemove);
+    // Remove in reverse order to avoid index issues
     for (let i = itemsToRemove.length - 1; i >= 0; i--) {
         items.splice(itemsToRemove[i], 1);
     }
+    console.table(items);
+    /* 
+    items.forEach((item, index) => { //forEach loop might not iterate over all elements: Modifying the Array During Iteration:
+      if (item.done){
+        //const index = items.indexOf(item);
+        const deletedItem = items.splice(index, 1); // delete one item at index position, index starts at 0
+        console.log(`delete checked Item ${index} ${item.text}`);
+      } else {
+        console.log(`Unchecked Item ${index} ${item.text}`);
+      }
+      console.table(items);
+    });
+    */
+
     localStorage.setItem('items',JSON.stringify(items));// sets the items into browser 'strings' localStorage: setItem(key,data), getItem, removeItem
     items = JSON.parse(localStorage.getItem('items'));//update items array from localStorage updated data
     populateList(items, itemsList);//display updated items
     this.reset(); //reset the form
   }
 
+  //const toDeleteCheckBox = document.getElementById('deleteCheckBox');// w/id does not check/uncheck the checkbox tick
+  //toDeleteCheckBox.addEventListener('click',toggleAllDone);
+  /*
+  document.addEventListener('DOMContentLoaded', function() {
+        const toDeleteCheckBox = document.getElementById('toDeleteCheckBox');
+        const itemsList = document.querySelectorAll('.individual-checkbox');//.plates
+
+        toDeleteCheckBox.addEventListener('change', function() {
+          itemsList.forEach(function(checkbox) {
+            checkbox.checked = toDeleteCheckBox.checked;
+           });
+        });
+  });
+  */
+
+
+
   function toggleAllDone(e) {
     e.preventDefault();
     items.forEach((item, index) => {
+      //const index = items.indexOf(item);
       items[index].done = !items[index].done;//toggle the item from checked to uncheck or vice
     });
     localStorage.setItem('items',JSON.stringify(items));//persist the items
     populateList(items, itemsList);//update the itemList display
+    //resetCheckBox();
     console.log(toDeleteCheckBox.checked);
+    // it's been changed to flase by the default checked = false in the respective input
     if (toDeleteCheckBox.checked) {
        toDeleteCheckBox.checked = false; // Unchecks the checkbox
+       document.getElementById('deleteCheckBox').checked = false;
+       deleteCheckBox.checkbox.checked = false;
     } else {
        toDeleteCheckBox.checked = true; // Checks the checkbox
+       document.getElementById('deleteCheckBox').checked = true;
+       deleteCheckBox.checkbox.checked = true;
     }
+    console.log(toDeleteCheckBox.checked);
+
+  }
+
+  function resetCheckBox(e) {
+    e.preventDefault();
+    const allCheckBoxes = document.querySelectorAll('input[name="deleteCheckBox"]'); // Get all checkbox elements 'input[type="checkbox"]'
+    allCheckBoxes.forEach(checkbox => {
+      console.log(checkbox.checked);
+       if (!checkbox) {
+         checkbox.checked = true; // check each checkbox
+       } else {
+         checkbox.checked = false; // Uncheck each checkbox
+       }
+       console.log(checkbox.checked);
+    });
+    
   }
 </script>
 </body>

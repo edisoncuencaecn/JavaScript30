@@ -183,6 +183,33 @@
     </li>
   </ul>
 <script>
+  //Add up the videos total time content in data-time, convert tehm in numbers and then use reduce.
+  //Returns a shallow copy (just copy first object key level) of an array into a new array. 
+  //Also makes a 'copy' then the original array/object won't get updated by if it's updated copy.
+  const timeNodes = Array.from(document.querySelectorAll('[data-time]'));//to convert Nodes into an array before 'map' can process data
+  /*
+  map the array only the time [0:"5:43", 1:"2:33"...]
+  splits dataset.time ["5","43"] into string mins & seconds [5, 43]
+  convert w/'parseFloat' the string into numbers to do math with them
+  reduce() will add up all the array elements and reduce them to  a big number, string, array, object, etc
+  const addedUpSeconds = seconds.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+  */
+  
+  const seconds = timeNodes
+  .map(node => node.dataset.time)
+  .map(timeCode => {
+    const [mins, secs] = timeCode.split(':')
+    .map(parseFloat); //.map(function(str){return parseFloat(str)});
+    return (mins * 60) + secs;
+    //console.log(mins, secs);
+  })
+  .reduce((total, liSeconds) => total + liSeconds, 0);
+  let secondsLeft = seconds; //converts seconds in hours, mins
+  const hours = Math.floor(secondsLeft / 3600); //to remove the decimals hours
+  secondsLeft = secondsLeft % 3600; // 'mode' calculates how many seconds are left after the full numbers hours
+  const mins = Math.floor(secondsLeft / 60); // calculates mins full numbers from secondsLeft
+  secondsLeft = secondsLeft % 60; //to remove the decimals seconds
+  console.log(hours, mins, secondsLeft);
 </script>
 </body>
 </html>
