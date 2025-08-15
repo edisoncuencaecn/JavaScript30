@@ -19,7 +19,7 @@ html {
 }
 
 /*clearfix*/
-.photobooth:after {
+.photobooth:after {/*insert the following CSS content after the selected '.photobooth' HTML element*/
   content: '';
   display: block;
   clear: both;
@@ -53,8 +53,7 @@ html {
   background: white;
 }
 
-.strip a:nth-child(5n+1) img { transform: rotate(10deg); }
-.strip a:nth-child(5n+2) img { transform: rotate(-2deg); }
+.strip a:nth-child(5n+2) img { transform: rotate(-2deg); } /* applies a 2D rotation to the image chidren to the every fifth element starting from the first child of their parent element.*/
 .strip a:nth-child(5n+3) img { transform: rotate(8deg); }
 .strip a:nth-child(5n+4) img { transform: rotate(-11deg); }
 .strip a:nth-child(5n+5) img { transform: rotate(12deg); }
