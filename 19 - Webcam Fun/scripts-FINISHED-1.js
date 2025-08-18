@@ -114,6 +114,5 @@ function greenScreen(pixels) {
 }
 
 getVideo();
-
-video.addEventListener('canplay', paintToCanvas); // listening for a <video> event in the webcam to paint it into canvas
-
+// listening for a <video> event in the webcam to paint it into canvas
+video.addEventListener('canplay', paintToCanvas); 
