@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Detection</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="words" contenteditable>
+  </div>
+  <script>
+    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new webkitSpeechRecognition();//SpeechRecognition(); // object is instantiated using its constructor of voice capture
+    recognition.interimResults = true; //true: allowing for real-time display of new text paragraph as it's being spoken and pause
+     recognition.lang = 'en-US';
+    let p = document.createElement('p'); 
+    const words = document.querySelector('.words');
+    words.appendChild(p); 
+    // Listen to window.SpeechRecognition.result not a 'click'
+    recognition.addEventListener('result', e => {
+        transcript = Array.from(e.results)
+        .map(result => result[0])
+        .map(result => result.transcript)
+        .join('');
+       //const sunnyScript = transcript.replace(/sunny|sun|light|/gi,'🌞'); // https://emojipedia.org/ 
+       //p.textContent = sunnyScript; // place text in the div class='words'
+       //p.textContent = transcript;
+      const poopScript = transcript.replace(/poop|poo|shit|dump/gi, '💩');
+      p.textContent = poopScript;
+       if (e.results[0].isFinal) {
+         p = document.createElement('p');
+         words.appendChild(p);
+       }
+    });
+    /* once there is a pause, the recognition finishes beeing unable to continue, 
+    then we have listen the speech's end to automatically re-start it */
+    recognition.addEventListener('end', recognition.start);
+
+    recognition.start();
+
+  </script>
+  <style>
+  </style>
+</body>
+</html>

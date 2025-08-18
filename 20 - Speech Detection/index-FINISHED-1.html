@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Detection</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="words" contenteditable>
+  </div>
+  <script>
+    /**cloud based engine for browser voice recognition convertion to text, 
+    use prefixed versions for browser compatibility: window.webkitSpeechRecognition; */
+    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition(); // object is instantiated using its constructor of voice capture
+    recognition.interimResults = true; //true: allowing for real-time display of new text paragraph as it's being spoken and pause
+     recognition.lang = 'en-US';
+    let p = document.createElement('p'); // text paragraph
+    const words = document.querySelector('.words');
+    words.appendChild(p); //insert the text pragraph into the div w/class = 'words'
+    // Listen to window.SpeechRecognition.result not a click
+    recognition.addEventListener('result', e => {
+      //console.log(e.results);
+      /*
+      SpeechRecognitionEvent {isTrusted: true, resultIndex: 0, 
+        results: SpeechRecognitionResultList, 
+        type: 'result', target: SpeechRecognition, …}
+        
+        SpeechRecognitionResult 0: SpeechRecognitionAlternative confidence: 0.8999999761581421
+        transcript: "hello good morning"
+        isFinal: false
+      */
+      // convert the SpeechRecognitionResultList into an array, using join('') to make one big string
+      transcript = Array.from(e.results)
+        .map(result => result[0])
+        .map(result => result.transcript)
+        .join('');
+      console.log(transcript);
+      /*
+        unescape['hello']
+        index.html:40 ['hello good']
+        index.html:40 ['hello good morning']
+        index.html:40 (2) ['hello', ' good morning']
+        index.html:40 (2) ['hello good', ' morning this']
+      */
+       const poopScript = transcript.replace(/poop|poo|shit|dump/gi, '💩'); //https://emojipedia.org/
+       p.textContent = poopScript; // place text in the div class='words'
+       // Detects when the speech has finalized
+       if (e.results[0].isFinal) {
+         p = document.createElement('p');
+         words.appendChild(p);
+       }
+    });
+    /* once there is a pause, the recognition finishes beeing unable to continue, 
+    then we have listen the speech's end to automatically re-start it */
+    recognition.addEventListener('end', recognition.start);
+
+    recognition.start();
+
+  </script>
+  <style>
+  </style>
+</body>
+</html>
