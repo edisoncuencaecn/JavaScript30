@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Speech Synthesis - converts text to voice</title>
+  <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+    <!-- Inputs names voice, text, rate & picth will align with the voice-->
+    <div class="voiceinator">
+
+      <h1>The Voiceinator 5000</h1>
+
+      <select name="voice" id="voices">
+        <option value="">Select A Voice</option>
+      </select>
+
+      <label for="rate">Rate:</label>
+      <input name="rate" type="range" min="0" max="3" value="1" step="0.1">
+
+      <label for="pitch">Pitch:</label>
+      <input name="pitch" type="range" min="0" max="2" step="0.1">
+
+      <textarea name="text">Hello! I love JavaScript 👍</textarea>
+      <button id="stop">Stop!</button>
+      <button id="speak">Speak</button>
+
+    </div>
+
+<script>
+  const msg = new SpeechSynthesisUtterance(); // it will contain info/attributes such as text, voice, rate, pitch & speechSynthesis(msg)
+  let voices = [];
+  const voicesDropdown = document.querySelector('[name="voice"]'); // voice options
+  const options = document.querySelectorAll('[type="range"], [name="text"]'); // rate, pitch & text
+  const speakButton = document.querySelector('#speak');
+  const stopButton = document.querySelector('#stop');
+
+  msg.text = document.querySelector('[name="text"]').value; // insert text into speechSynthesis from text area
+
+  function populateVoices() { // populate voices dropdown
+    voices = this.getVoices(); // 'this' is speechSynthesis object (voice.name, voice.lang) to fullfill the voice dropdown with
+    console.log(voices);
+    const voiceOptions = voices
+    .filter(voice => voice.lang.includes('en')) // filter just english
+    .map(voice => `<option value="${voice.name}">${voice.name} (${voice.lang})</option>`) // maps voice and language
+    .join(''); // big html formated string
+    voicesDropdown.innerHTML = voiceOptions; // converts the string into html
+  }
+
+  function setVoice(){
+    msg.voice = voices.find(voice => voice.name === this.value); //msg is SpeechSynthesisUtterance() output looking for a name match in SpeechSynthesisVoice array 
+  }
+
+  function toggle(startOver = true){ // to re-start the voice message after the voice changed, 'startOver' is by default 'true', ther could be 'false' too
+    speechSynthesis.cancel();
+    if(startOver){
+      speechSynthesis.speak(msg);
+    }
+  }
+
+  function setOption(){
+    console.log(this.name, this.value); // 'this' represents the rate & pitch element objects name(old property) & value(new property)
+    msg[this.name] = this.value;
+    toggle();
+  }
+
+  speechSynthesis.addEventListener('voiceschanged', populateVoices); // populates voices dropdown
+  voicesDropdown.addEventListener('change', setVoice); // Listens for a voice change from the voices dropdown
+  options.forEach(option => option.addEventListener('change',setOption)); // Listen for pitch & rate change
+  speakButton.addEventListener('click', toggle); // Listen for a click to speak
+  stopButton.addEventListener('click', () => toggle(false)); // Listen for a click to stop
+
+</script>
+
+</body>
+</html>
