@@ -25,10 +25,16 @@ body {
   transition: transform 0.5s;
 }
 
+/* way to change css main classes with created new classes children*/
+/* new fixed-nav child class created to give the logo a bigger effect during transition*/
+body.fixed-nav .site-wrap {
+  transform: scale(1);
+}
+
 header {
   text-align: center;
   height: 50vh;
-  background: url(https://source.unsplash.com/GKN6rpDr0EI/960x640) bottom center no-repeat;
+  background: url(img_forest.jpg) center center no-repeat;/*url(https://source.unsplash.com/GKN6rpDr0EI/960x640) bottom center no-repeat; original url unable to fetched*/
   background-size: cover;
   display: flex;
   align-items: center;
@@ -50,6 +56,13 @@ nav {
   z-index: 1;
 }
 
+/* way to change css main classes with created new classes children*/
+/* new created class*/
+body.fixed-nav nav {
+  position: fixed;
+  box-shadow: 0 5px 0 rgba(0,0,0,0.1);
+}
+
 nav ul {
   margin: 0;
   padding:0;
@@ -66,9 +79,9 @@ nav li {
 }
 
 li.logo {
-  max-width: 0;
-  overflow: hidden;
-  background: white;
+  max-width: 0; /* keeps the li.logo hidden, don't use width will make transition to fail */
+  overflow: hidden; /* keeps the li.logo hidden */
+  background: white; 
   transition: all .5s;
   font-weight: 600;
   font-size: 30px;
@@ -76,6 +89,12 @@ li.logo {
 
 li.logo a {
   color: black;
+}
+
+/* way to change css main classes with created new classes children*/
+/* new created fixed-nav child class to reveal automatically the hidden logo just when the fixed navbar hits the top of the screen*/
+.fixed-nav li.logo {
+  max-width: 500px; /* don't use width will make transition to fail */
 }
 
 nav a {

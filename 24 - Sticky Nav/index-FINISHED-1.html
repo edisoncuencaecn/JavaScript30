@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Sticky Nav</title>
-  <link rel="stylesheet" href="style-START.css">
+  <title>Sticky NavBar to the Window Top</title>
+  <link rel="stylesheet" href="style.css">
   <link rel="icon" href="https://fav.farm/🔥" />
 </head>
 <body>
@@ -14,7 +14,7 @@
 
   <nav id="main">
     <ul>
-      <li class="logo"><a href="#">LOST.</a></li>
+      <li class="logo"><a href="#">LOGO</a></li>
       <li><a href="#">Home</a></li>
       <li><a href="#">About</a></li>
       <li><a href="#">Images</a></li>
@@ -55,6 +55,28 @@
   </div>
 
 <script>
+  // While scrolling the window once the navbar is on top of the window (off of the screen >500px) the navbar options will be automatically (fixed itself)
+  const nav = document.querySelector('#main'); // Selects the main navbar by 'id'
+  const topOfNav = nav.offsetTop; // to figure out where the top of the nav bar is
+
+
+  // It will run for every single page when scrolled to
+  function fixNav() { 
+    console.log(topOfNav, window.scrollY); // mine 456, 0-5758 top=456 ; wes 542, 0-5758 top=542
+  
+    // then once topOfNav === window.scrollY 456===456 the navbar will be fixed itself
+    if (window.scrollY >= topOfNav){
+      document.body.style.paddingTop = nav.offsetHight + 'px'; // take care of the extra space, nav.offsetHight is the navbar hight 64px added to the top padding
+      // check at dev tools elements body, how the calss is added.
+      document.body.classList.add('fixed-nav'); // Add a new created class 'fixed-nav', 'fixed-nav li.logo', 'fixed-nav .site-wrap' @ style.css' to the document to fix the navbar & reveal hidden logo
+    } else {
+      document.body.style.paddingTop = 0; 
+      document.body.classList.remove('fixed-nav'); // remove the new created class 'fixed-nav, style.css' to the document to fix the navbar
+    }
+  }
+  
+  window.addEventListener('scroll',fixNav); // window handles events related to the browser window's state like 'navbar' position window.scrollY, window.scrollX
+  //document.addEventListener('scroll',fixNav); // document handles events related to the content and structure of the loaded web page like mouse & keyboard ones.
 
 </script>
 
