@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding JavaScript's Capture</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bod">
+
+  <div class="one">
+    <div class="two">
+      <div class="three">
+        <button onclick="alert('Button clicked!')">Click Me</button>
+      </div>
+    </div>
+  </div>
+
+<style>
+</style>
+
+<script>
+const parent = document.querySelector('.one');
+const child = document.querySelector('.two');
+const grandChild = document.querySelector('.three');
+// Bubbling propagates up 'e.target to window' example: click on parent which triggers itself, click on child both trigger child and parent, click on grandChild then triggers grandChild, child & parent
+// NodeList sample: divs.forEach(div => div.addEventListener('click',logText));
+parent.addEventListener('click', function(e) {
+  console.log('Parent (bubbling):', e.target);
+});
+child.addEventListener('click', function(e) {
+  console.log('child (bubbling):', e.target);
+});
+grandChild.addEventListener('click', function(e) {
+  console.log('grandchild (bubbling):', e.target);
+});
+// Arrow function sample:
+divs.forEach(div => div.addEventListener('click',logText,{capture: false})); // adds an event listener to each nexted div to bubble up.
+
+// Capturing propagates down 'from window to e.target' example: click on parent which triggers itself, click on child both trigger parent & child, click on grandChild then triggers parent, child, grandChild
+// NodeList sample: divs.forEach(div => div.addEventListener('click',logText,{capture: true}));
+parent.addEventListener('click', function(e) {
+  console.log('Parent (capturing):', e.target);
+}, true); // implicity capture : true
+child.addEventListener('click', function(e) {
+  console.log('Child (capturing):', e.target);
+}, true);
+grandChild.addEventListener('click', function(e) {
+  console.log('grandChild (capturing):', e.target);
+}, true);
+// Arrow function sample:
+divs.forEach(div => div.addEventListener('click',logText,{capture: true})); // adds an event listener to each nexted div to capture down.
+
+// once property example: triggers just once stopping propagation. e.stopPropagation() inside the event handler function will stop propagation.
+const button = document.querySelector('button');
+button.addEventListener('click', function(e) {
+  console.log('button clicked once', e.target);
+}, {once: true});
+// Arrow function sample
+button.addEventListener('click', () => {
+  console.log('click!');
+},{once: true}) // The button will trigger just once, usefull for store check out
+
+
+</script>
+</body>
+</html>

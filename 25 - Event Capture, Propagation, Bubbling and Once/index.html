@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding JavaScript's Capture</title>
+  <link rel="icon" href="https://fav.farm/🔥" />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bod">
+
+  <div class="one">
+    <div class="two">
+      <div class="three">
+      
+      </div>
+    </div>
+  </div>
+  <button></button>
+
+<style>
+</style>
+
+<script>
+  /* events travel, propagation: bubbling (up to window from e.target), event capturing (down from window up to e.target), 
+  once (triggers just once) property use in the context of nested <div>s when we use an addEventListener().*/
+    
+  const divs = document.querySelectorAll('div'); // select all the 3 nested divs.
+  document.body.addEventListener('click',logText);
+
+  function logText(e) {
+    //e.stopPropagation(); // stops propagation when it's in the event handler function the same as 'once: true' removing the eventListener as 'removeEventListener'.
+  }
+
+  //divs.forEach(div => div.addEventListener('click',logText,capture : false)); // adds an event listener to each nexted div to bubble up, capture is false by default.
+  divs.forEach(div => div.addEventListener('click',logText,{capture: true, once : true})); // adds an event listener to each nexted div to bubble up.
+  button = document.querySelector('button');
+  button.addEventListener('click', () => {
+    console.log('click!');
+  },{once: true}) // The button will just trigger once
+
+</script>
+</body>
+</html>
