@@ -36,7 +36,34 @@
   </div>
 
 <script>
+  const slider = document.querySelector('.items');
+  let isDown = false; // clicking or not
+  let startX; // start of mousedown
+  let scrollLeft;
+  
+  // where its mousedown before to start mousemove we need to record where the initial mousedown 
+  slider.addEventListener('mousedown',(e) => {
+    isDown = true;
+    slider.classList.add('active');
+    startX = e.pageX - slider.offsetLeft;
+    scrollLeft = slider.scrollLeft;
+  });
+  slider.addEventListener('mouseleave',() => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+  slider.addEventListener('mouseaup',() => {
+    isDown = false;
+    slider.classList.remove('active');
+  });
+  slider.addEventListener('mousemove',(e) => {
+    if (!isDown) return;
+    e.preventDefault(); // stops from selecting text 
+    const x = e.pageX - slider.offsetLeft; // initial click position
+    const walk = (x- startX) * 3; // initial click - start of mousedown, for every pixel we scroll left 3 px
+    console.log(walk)
+    slider.scrollLeft = walk;
+  });
 </script>
-
-  </body>
+</body>
 </html>
