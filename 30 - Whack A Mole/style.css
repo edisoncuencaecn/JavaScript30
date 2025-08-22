@@ -54,6 +54,7 @@ h1 {
   bottom: -30px;
 }
 
+/* mole is hidden*/
 .mole {
   background: url('mole.svg') bottom center no-repeat;
   background-size: 60%;
@@ -64,6 +65,7 @@ h1 {
   transition:all 0.4s;
 }
 
+/*mole is up*/
 .hole.up .mole {
   top: 0;
 }

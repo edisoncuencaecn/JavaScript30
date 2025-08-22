@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Whack A Mole!</title>
+  <link href='https://fonts.googleapis.com/css?family=Amatic+SC:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+
+  <h1>Whack-a-mole w/persistance by Edison <span class="score">0</span></h1>
+  <button onClick="startGame()">Start!</button>
+  <br><br>
+  <button onClick="RemoveScores()">Remove Scores!</button>
+  <div class="game">
+    <div class="hole hole1">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole2">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole3">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole4">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole5">
+      <div class="mole"></div>
+    </div>
+    <div class="hole hole6">
+      <div class="mole"></div>
+    </div>
+  </div>
+
+<script>
+  // Scores when clicking on mole wwhich is popUp
+  const holes = document.querySelectorAll('.hole');
+  const scoreBoard = document.querySelector('.score');
+  const moles = document.querySelectorAll('.mole');
+  let lastHole; //to keep the last hole
+  let timeUp = false; // to control the game's time up ''true which is the game duration until timeUp is 'false'
+  let scores = JSON.parse(localStorage.getItem('scores')) || []; // to store/persist all the input data into an array of objects
+  let score = scores[scores.length-1] || 0; // adding the latest score
+  scoreBoard.textContent = score;// update the score <span class="score">0</span></h1>
+ 
+  // gives random time amount between min-max miliseconds
+  function randomTime(min, max) {
+    return Math.round(Math.random() * (max - min) + min);
+  }
+
+  // random whole number between 0-5 from the nodeList 'holes' for the mole to pop up from
+  function randomHole(holes) {
+    const idx = Math.floor(Math.random() * holes.length);
+    const hole = holes[idx]; // idx goes from 0-5
+    // if the random hole is the same as the last hole, it will call itself function again
+    if (hole === lastHole) {
+      console.log('Ah nah thats the same one bud');
+      return randomHole(holes);
+    }
+    lastHole = hole; //to keep the last hole
+    return hole; // different than last random hole
+  }
+
+  // to get the moles popping up and peep
+  function peep() {
+    const time = randomTime(200, 1000);
+    const hole = randomHole(holes);
+    console.log(time, hole);
+    hole.classList.add('up'); // put mole up: To change the css class 'hole.up .mole' attribute 'top:0' from regular 'top:100%' adding a class '.up'
+    setTimeout(() => {
+      hole.classList.remove('up'); // put mole down/hide after 'time': To change back the css class 'hole.up .mole' attribute 'top:100%' from regular 'top:0' removing a class '.up'
+      if (!timeUp) peep(); // to continue indefinitally the game, call the itself function again
+    }, time);
+  }
+
+  // to re-start the game and put back false timeUp & to zero the score via 'textContent' to set the textual content of <h1>Whack-a-mole! <span class="score">0</span></h1>
+  function startGame() {
+    scoreBoard.textContent = score; // sets to previous score <span class="score">0</span></h1>
+    timeUp = false;
+    score =  score ; // sets to previous score <span class="score">0</span></h1>
+    peep();
+    setTimeout(() => timeUp = true, 10000)
+  }
+
+  function RemoveScores(){
+    scores = []
+    localStorage.setItem('scores',JSON.stringify(scores));//persist the scores
+    scoreBoard.textContent = 0; 
+  }
+
+  // to catch the mole by the head and score
+  function bonk(e) {
+    if(!e.isTrusted) return; // cheater!
+    score++; // it scores
+    scores.push(score); //adds the new score as the last element into the array 'scores', unshift will add it as first element
+    localStorage.setItem('scores',JSON.stringify(scores));//persist the scores
+    this.classList.remove('up'); // put the mole down/hide removing 'top:0'
+    scoreBoard.textContent = score;// update the score <span class="score">0</span></h1>
+  }
+  moles.forEach(mole => mole.addEventListener('click', bonk)); // mouse event 'click' property 'isTrusted' true/false is used to catch a score
+
+</script>
+</body>
+</html>
