@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Video Speed Scrubber</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="https://fav.farm/🔥" />
+</head>
+<body>
+
+  <div class="wrapper">
+    <video class="flex" width="765" height="430" src="mov_bbb.mp4" loop controls></video>
+    <div class="speed">
+      <div class="speed-bar">1×</div>
+    </div>
+  </div>
+<script>
+  // Control how fast the video goes changing the payback rate then update the rate scroll bar
+  const speed = document.querySelector('.speed');
+  const bar = document.querySelector('.speed-bar'); 
+  const video = document.querySelector('.flex');
+
+  speed.addEventListener('mousemove', function(e) {
+    const y = e.pageY - this.offsetTop; // 251px, mouse's 'y'position 0-410px position on the speed rate scroller
+    const percent = y / this.offsetHeight; // 410px, 'this' is the speed bar div
+    const min = 0.4;
+    const max = 4;
+    const height = Math.round(percent * 100) + '%';
+    //const width = 
+    bar.style.height = height;
+    const playbackrate = percent * (max - min) + min;
+    bar.textContent = playbackrate.toFixed(2) + 'x';
+    //apply the playbackrate to the video
+    video.playbackRate = playbackrate;
+    console.log(this.offsetTop, this.offsetHeight, percent, height);
+  });
+
+</script>
+</body>
+</html>
